@@ -7,26 +7,52 @@ FROM ubuntu:22.04
 # Base dependency installation
 RUN apt-get -y upgrade
 RUN apt-get -y update
-RUN apt-get install -y git wget gpg lsb-core unzip vim nano curl zsh software-properties-common docker
+RUN apt-get install -y git wget gpg lsb-core unzip vim nano curl zsh software-properties-common
 
 ###########################
 #    Install Oh-My-Zsh    #
 ###########################
 RUN sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# // ZSH Installed
 
 ###########################
-# Install Homebrew        #
+#     Install Homebrew    #
 ###########################
 # Fetch and Run Installer
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # // Homebrew Installed. /root/.bashrc is already configured.
+
+
+###########################
+#      Install Docker     #
+###########################
+# Add Docker's official GPG key:
+RUN apt-get install ca-certificates gnupg
+RUN install -m 0755 -d /etc/apt/keyrings
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+RUN chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the repository to Apt sources:
+RUN echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+RUN apt-get update
+
+# Install Docker Engine
+RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# // Docker Installed
+
+
+
+###########################
+#      Install Tools      #
+###########################
 
 # Set Locale to UTF-8
 RUN locale-gen "en_US.UTF-8"
 
 # Install Ansible
 RUN add-apt-repository --yes --update ppa:ansible/ansible
-RUN apt-get install -y ansible
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y ansible
 
 # Install Stax2AWS
 RUN /home/linuxbrew/.linuxbrew/bin/brew tap stax-labs/homebrew-taps
@@ -48,16 +74,17 @@ RUN wget -O "awscliv2.zip" "https://awscli.amazonaws.com/awscli-exe-linux-x86_64
 RUN unzip awscliv2.zip && ./aws/install && rm -f awscliv2.zip
 # // AWS-CLI Installed.
 
+# // Tools installed.
 
 ###########################
-# Setup working directory #
+#    Setup Config Dirs    #
 ###########################
 
 RUN mkdir /root/.ssh
 RUN mkdir /root/.aws
 
 ###########################
-# Setup working directory #
+# Setup Working Directory #
 ###########################
 
 # Create within container context.
