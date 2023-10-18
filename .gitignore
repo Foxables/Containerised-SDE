@@ -1,0 +1,9 @@
+.ssh/**
+.aws/**
+*.env
+repos/**
+!.ssh/known_hosts
+*.DS_Store
+!.aws/empty
+!repos/empty
+!.gitignore
