@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  wrap:
+    image: wrap
+    container_name: wrap
+    env_file:
+      - config.env
+    volumes:
+      - .:/app:rw
+      - .bashrc:/root/.bashrc:rw
+      - .zshrc:/root/.zshrc:rw
+      - .ssh/:/root/.ssh:rw
+      - .aws/:/root/.aws:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw # This allows for Docker Out of Docker
