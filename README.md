@@ -21,7 +21,7 @@ This container wraps common commands used by DevOps engineers working with purpo
 
 ## Get Started
 Run the following commands;
-1. `docker build -t wrap .`
+1. `docker build -t wrap .` (Note: If running Apple Silicone, please use the command `docker build -t wrap -f ARMv8-Dockerfile .`)
 1. `docker-compose up -d`
 1. `docker exec -it wrap /bin/bash`
 
@@ -62,5 +62,7 @@ Note: Custom changes to the container config that are not in the `Dockerbuild` f
 
 ## Additional Information
 By default, this project is configured to connect to a dev-container called `wrap`. If you intend on using a different name, you may need to remove the `.devcontainer` configuration and follow the official documentation on [How to Configure VSCode to Run in an Existing Dev Container](https://code.visualstudio.com/docs/devcontainers/attach-container).
+
+Note: Homebrew within a linux container does not support Apple Silicone natively. Containers that run on Apple Silicone will need to be ran using platform emulation. Please use the ARMv8-Dockerfile for all Apple Silicone Environments.
 
 Warning: Do not commit your existing repositories to any fork of this project. The `repos` directory is added to the `.gitignore` file for a reason.
